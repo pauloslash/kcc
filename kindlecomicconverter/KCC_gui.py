@@ -277,13 +277,13 @@ class WorkerThread(QtCore.QThread):
                 self.clean()
                 return
             self.errors = False
-            MW.addMessage.emit('<b>Source:</b> ' + job, 'info', False)
+            MW.addMessage.emit('<b>Fonte:</b> ' + job, 'info', False)
             if gui_current_format == 'CBZ':
-                MW.addMessage.emit('Creating CBZ files', 'info', False)
-                GUI.progress.content = 'Creating CBZ files'
+                MW.addMessage.emit('Criando arquivos CBZ', 'info', False)
+                GUI.progress.content = 'Criando arquivos CBZ'
             else:
-                MW.addMessage.emit('Creating EPUB files', 'info', False)
-                GUI.progress.content = 'Creating EPUB files'
+                MW.addMessage.emit('Criando arquivos EPUB', 'info', False)
+                GUI.progress.content = 'Criando arquivos EPUB'
             jobargv = list(argv)
             jobargv.append(job)
             try:
@@ -298,27 +298,27 @@ class WorkerThread(QtCore.QThread):
                     GUI.progress.content = ''
                     self.errors = True
                     MW.addMessage.emit(str(warn), 'warning', False)
-                    MW.addMessage.emit('Error during conversion! Please consult '
+                    MW.addMessage.emit('Erro durante a conversão! Por favor consulte '
                                        '<a href="https://github.com/ciromattia/kcc/wiki/Error-messages">wiki</a> '
-                                       'for more details.', 'error', False)
-                    MW.addTrayMessage.emit('Error during conversion!', 'Critical')
+                                       'para mais detalhes.', 'error', False)
+                    MW.addTrayMessage.emit('Erro durante a conversão!', 'Critical')
             except Exception as err:
                 GUI.progress.content = ''
                 self.errors = True
                 _, _, traceback = sys.exc_info()
                 if len(err.args) == 1:
-                    MW.showDialog.emit("Error during conversion %s:\n\n%s\n\nTraceback:\n%s"
+                    MW.showDialog.emit("Erro durante a conversão %s:\n\n%s\n\nRastreamento:\n%s"
                                        % (jobargv[-1], str(err), sanitizeTrace(traceback)), 'error')
                 else:
-                    MW.showDialog.emit("Error during conversion %s:\n\n%s\n\nTraceback:\n%s"
+                    MW.showDialog.emit("Erro durante a conversão %s:\n\n%s\n\nRastreamento:\n%s"
                                        % (jobargv[-1], str(err.args[0]), err.args[1]), 'error')
                     GUI.sentry.extra_context({'realTraceback': err.args[1]})
                 if ' is corrupted.' not in str(err):
                     GUI.sentry.captureException()
-                MW.addMessage.emit('Error during conversion! Please consult '
+                MW.addMessage.emit('Erro durante a conversão! Por favor consulte '
                                    '<a href="https://github.com/ciromattia/kcc/wiki/Error-messages">wiki</a> '
-                                   'for more details.', 'error', False)
-                MW.addTrayMessage.emit('Error during conversion!', 'Critical')
+                                   'para mais detalhes.', 'error', False)
+                MW.addTrayMessage.emit('Erro durante a conversão!', 'Critical')
             if not self.conversionAlive:
                 if 'outputPath' in locals():
                     for item in outputPath:
@@ -329,15 +329,15 @@ class WorkerThread(QtCore.QThread):
             if not self.errors:
                 GUI.progress.content = ''
                 if gui_current_format == 'CBZ':
-                    MW.addMessage.emit('Creating CBZ files... <b>Done!</b>', 'info', True)
+                    MW.addMessage.emit('Criando arquivos CBZ... <b>Feito!</b>', 'info', True)
                 else:
-                    MW.addMessage.emit('Creating EPUB files... <b>Done!</b>', 'info', True)
+                    MW.addMessage.emit('Criando arquivos EPUB... <b>Feito!</b>', 'info', True)
                 if 'MOBI' in gui_current_format:
-                    MW.progressBarTick.emit('Creating MOBI files')
+                    MW.progressBarTick.emit('Criando arquivos MOBI')
                     MW.progressBarTick.emit(str(len(outputPath) * 2 + 1))
                     MW.progressBarTick.emit('tick')
-                    MW.addMessage.emit('Creating MOBI files', 'info', False)
-                    GUI.progress.content = 'Creating MOBI files'
+                    MW.addMessage.emit('Criando arquivos MOBI', 'info', False)
+                    GUI.progress.content = 'Criando arquivos MOBI'
                     work = []
                     for item in outputPath:
                         work.append([item])
@@ -357,9 +357,9 @@ class WorkerThread(QtCore.QThread):
                         return
                     if self.kindlegenErrorCode[0] == 0:
                         GUI.progress.content = ''
-                        MW.addMessage.emit('Creating MOBI files... <b>Done!</b>', 'info', True)
-                        MW.addMessage.emit('Processing MOBI files', 'info', False)
-                        GUI.progress.content = 'Processing MOBI files'
+                        MW.addMessage.emit('Criando arquivos MOBI... <b>Feito!</b>', 'info', True)
+                        MW.addMessage.emit('Processando arquivos MOBI', 'info', False)
+                        GUI.progress.content = 'Processando arquivos MOBI'
                         self.workerOutput = []
                         for item in outputPath:
                             self.workerOutput.append(comic2ebook.makeMOBIFix(
@@ -379,13 +379,13 @@ class WorkerThread(QtCore.QThread):
                                         move(mobiPath, GUI.targetDirectory)
                                     except Exception:
                                         pass
-                            MW.addMessage.emit('Processing MOBI files... <b>Done!</b>', 'info', True)
+                            MW.addMessage.emit('Processando arquivos MOBI... <b>Feito!</b>', 'info', True)
                             k = kindle.Kindle()
                             if k.path and k.coverSupport:
                                 for item in outputPath:
                                     comic2ebook.options.covers[outputPath.index(item)][0].saveToKindle(
                                         k, comic2ebook.options.covers[outputPath.index(item)][1])
-                                MW.addMessage.emit('Kindle detected. Uploading covers... <b>Done!</b>', 'info', False)
+                                MW.addMessage.emit('Kindle detectado. Carregando capas... <b>Feito!</b>', 'info', False)
                         else:
                             GUI.progress.content = ''
                             for item in outputPath:
@@ -394,8 +394,8 @@ class WorkerThread(QtCore.QThread):
                                     os.remove(mobiPath)
                                 if os.path.exists(mobiPath + '_toclean'):
                                     os.remove(mobiPath + '_toclean')
-                            MW.addMessage.emit('Failed to process MOBI file!', 'error', False)
-                            MW.addTrayMessage.emit('Failed to process MOBI file!', 'Critical')
+                            MW.addMessage.emit('Falha ao processar arquivo MOBI!', 'error', False)
+                            MW.addTrayMessage.emit('Falha ao processar arquivo MOBI!', 'Critical')
                     else:
                         GUI.progress.content = ''
                         epubSize = (os.path.getsize(self.kindlegenErrorCode[2])) // 1024 // 1024
@@ -404,13 +404,13 @@ class WorkerThread(QtCore.QThread):
                                 os.remove(item)
                             if os.path.exists(item.replace('.epub', '.mobi')):
                                 os.remove(item.replace('.epub', '.mobi'))
-                        MW.addMessage.emit('KindleGen failed to create MOBI!', 'error', False)
-                        MW.addTrayMessage.emit('KindleGen failed to create MOBI!', 'Critical')
+                        MW.addMessage.emit('O KindleGen falhou ao criar o MOBI!', 'error', False)
+                        MW.addTrayMessage.emit('O KindleGen falhou ao criar o MOBI!', 'Critical')
                         if self.kindlegenErrorCode[0] == 1 and self.kindlegenErrorCode[1] != '':
-                            MW.showDialog.emit("KindleGen error:\n\n" + self.kindlegenErrorCode[1], 'error')
+                            MW.showDialog.emit("KindleGen erro:\n\n" + self.kindlegenErrorCode[1], 'error')
                         if self.kindlegenErrorCode[0] == 23026:
-                            MW.addMessage.emit('Created EPUB file was too big.', 'error', False)
-                            MW.addMessage.emit('EPUB file: ' + str(epubSize) + 'MB. Supported size: ~350MB.', 'error',
+                            MW.addMessage.emit('O arquivo EPUB criado era muito grande.', 'error', False)
+                            MW.addMessage.emit('Arquivo EPUB: ' + str(epubSize) + 'MB. Tamanho suportado: ~350MB.', 'error',
                                                False)
                 else:
                     for item in outputPath:
@@ -424,8 +424,8 @@ class WorkerThread(QtCore.QThread):
         MW.hideProgressBar.emit()
         GUI.needClean = True
         if not self.errors:
-            MW.addMessage.emit('<b>All jobs completed.</b>', 'info', False)
-            MW.addTrayMessage.emit('All jobs completed.', 'Information')
+            MW.addMessage.emit('<b>Todas as tarefas concluídas.</b>', 'info', False)
+            MW.addTrayMessage.emit('Todas as tarefas concluídas.', 'Information')
         MW.modeConvert.emit(1)
 
 
@@ -452,7 +452,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
         if self.needClean:
             self.needClean = False
             GUI.jobList.clear()
-        dname = QtWidgets.QFileDialog.getExistingDirectory(MW, 'Select directory', self.lastPath)
+        dname = QtWidgets.QFileDialog.getExistingDirectory(MW, 'Selecionar diretório', self.lastPath)
         if dname != '':
             if sys.platform.startswith('win'):
                 dname = dname.replace('/', '\\')
@@ -465,10 +465,10 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
             self.needClean = False
             GUI.jobList.clear()
         if self.tar or self.sevenzip:
-            fnames = QtWidgets.QFileDialog.getOpenFileNames(MW, 'Select file', self.lastPath,
+            fnames = QtWidgets.QFileDialog.getOpenFileNames(MW, 'Selecionar arquivo', self.lastPath,
                                                             'Comic (*.cbz *.cbr *.cb7 *.zip *.rar *.7z *.pdf);;All (*.*)')
         else:
-            fnames = QtWidgets.QFileDialog.getOpenFileNames(MW, 'Select file', self.lastPath,
+            fnames = QtWidgets.QFileDialog.getOpenFileNames(MW, 'Selecionar arquivo', self.lastPath,
                                                             'Comic (*.pdf);;All (*.*)')
         for fname in fnames[0]:
             if fname != '':
@@ -481,7 +481,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
     def selectFileMetaEditor(self):
         sname = ''
         if QtWidgets.QApplication.keyboardModifiers() == QtCore.Qt.ShiftModifier:
-            dname = QtWidgets.QFileDialog.getExistingDirectory(MW, 'Select directory', self.lastPath)
+            dname = QtWidgets.QFileDialog.getExistingDirectory(MW, 'Selecionar diretório', self.lastPath)
             if dname != '':
                 sname = os.path.join(dname, 'ComicInfo.xml')
                 if sys.platform.startswith('win'):
@@ -489,13 +489,13 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
                 self.lastPath = os.path.abspath(sname)
         else:
             if self.sevenzip:
-                fname = QtWidgets.QFileDialog.getOpenFileName(MW, 'Select file', self.lastPath,
+                fname = QtWidgets.QFileDialog.getOpenFileName(MW, 'Selecionar arquivo', self.lastPath,
                                                               'Comic (*.cbz *.cbr *.cb7)')
             else:
                 fname = ['']
-                self.showDialog("Editor is disabled due to a lack of 7z.", 'error')
-                self.addMessage('<a href="https://github.com/ciromattia/kcc#7-zip">Install 7z (link)</a>'
-                ' to enable metadata editing.', 'warning')
+                self.showDialog("O editor está desativado devido à falta de 7z.", 'error')
+                self.addMessage('<a href="https://github.com/ciromattia/kcc#7-zip">Instale o 7z (link)</a>'
+                ' para habilitar a edição de metadados.', 'warning')
             if fname[0] != '':
                 if sys.platform.startswith('win'):
                     sname = fname[0].replace('/', '\\')
@@ -508,7 +508,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
             except Exception as err:
                 _, _, traceback = sys.exc_info()
                 GUI.sentry.captureException()
-                self.showDialog("Failed to parse metadata!\n\n%s\n\nTraceback:\n%s"
+                self.showDialog("Falha ao analisar os metadados!\n\n%s\n\nRastreamento:\n%s"
                                 % (str(err), sanitizeTrace(traceback)), 'error')
             else:
                 self.editor.ui.exec_()
@@ -556,7 +556,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(":/Other/icons/convert.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
             GUI.convertButton.setIcon(icon)
-            GUI.convertButton.setText('Convert')
+            GUI.convertButton.setText('Converter')
             GUI.centralWidget.setAcceptDrops(True)
         elif enable == 0:
             self.conversionAlive = True
@@ -564,7 +564,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(":/Other/icons/clear.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
             GUI.convertButton.setIcon(icon)
-            GUI.convertButton.setText('Abort')
+            GUI.convertButton.setText('Abortar')
             GUI.centralWidget.setAcceptDrops(False)
         elif enable == -1:
             self.conversionAlive = True
@@ -609,8 +609,8 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
         profile = GUI.profiles[str(GUI.deviceBox.currentText())]
         if value == 2:
             if profile['Label'] in ['KV', 'KO']:
-                self.addMessage('This option is intended for older Kindle models.', 'warning')
-                self.addMessage('On this device, quality improvement will be negligible.', 'warning')
+                self.addMessage('Esta opção é destinada a modelos antigos de Kindle.', 'warning')
+                self.addMessage('Neste dispositivo, a melhoria de qualidade será negligente.', 'warning')
             GUI.upscaleBox.setEnabled(False)
             GUI.upscaleBox.setChecked(True)
         else:
@@ -621,7 +621,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
         valueRaw = int(5 * round(float(value) / 5))
         value = '%.2f' % (float(valueRaw) / 100)
         if float(value) <= 0.09:
-            GUI.gammaLabel.setText('Gamma: Auto')
+            GUI.gammaLabel.setText('Gamma: Automático')
         else:
             GUI.gammaLabel.setText('Gamma: ' + str(value))
         GUI.gammaSlider.setValue(valueRaw)
@@ -630,7 +630,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
     def changeCroppingPower(self, value):
         valueRaw = int(5 * round(float(value) / 5))
         value = '%.2f' % (float(valueRaw) / 100)
-        GUI.croppingPowerLabel.setText('Cropping Power: ' + str(value))
+        GUI.croppingPowerLabel.setText('Potência de Recorte: ' + str(value))
         GUI.croppingPowerSlider.setValue(valueRaw)
         self.croppingPowerValue = value
 
@@ -654,7 +654,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
             GUI.qualityBox.setChecked(False)
         if str(GUI.deviceBox.currentText()) == 'Other':
             self.addMessage('<a href="https://github.com/ciromattia/kcc/wiki/NonKindle-devices">'
-                            'List of supported Non-Kindle devices.</a>', 'info')
+                            'Lista de dispositivos não-Kindle suportados.</a>', 'info')
 
     def changeFormat(self, outputformat=None):
         profile = GUI.profiles[str(GUI.deviceBox.currentText())]
@@ -719,7 +719,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
     def convertStart(self):
         if self.conversionAlive:
             GUI.convertButton.setEnabled(False)
-            self.addMessage('The process will be interrupted. Please wait.', 'warning')
+            self.addMessage('O processo será interrompido. Por favor, aguarde.', 'warning')
             self.conversionAlive = False
             self.worker.sync()
         else:
@@ -738,12 +738,12 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
                 self.needClean = False
                 GUI.jobList.clear()
             if GUI.jobList.count() == 0:
-                self.addMessage('No files selected! Please choose files to convert.', 'error')
+                self.addMessage('Nenhum arquivo selecionado! Por favor, escolha arquivos para converter.', 'error')
                 self.needClean = True
                 return
             if self.currentMode > 2 and (GUI.widthBox.value() == 0 or GUI.heightBox.value() == 0):
                 GUI.jobList.clear()
-                self.addMessage('Target resolution is not set!', 'error')
+                self.addMessage('A resolução alvo não está definida!', 'error')
                 self.needClean = True
                 return
             if 'MOBI' in GUI.formats[str(GUI.formatBox.currentText())]['format'] and not self.kindleGen:
@@ -757,14 +757,14 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
 
     def display_kindlegen_missing(self):
         self.addMessage(
-            '<a href="https://github.com/ciromattia/kcc#kindlegen"><b>Install KindleGen (link)</b></a> to enable MOBI conversion for Kindles!',
+            '<a href="https://github.com/ciromattia/kcc#kindlegen"><b>Instale o KindleGen (link)</b></a> para habilitar a conversão para MOBI para Kindles!',
             'error'
         )
 
     def saveSettings(self, event):
         if self.conversionAlive:
             GUI.convertButton.setEnabled(False)
-            self.addMessage('The process will be interrupted. Please wait.', 'warning')
+            self.addMessage('O processo será interrompido. Por favor, aguarde.', 'warning')
             self.conversionAlive = False
             self.worker.sync()
             event.ignore()
@@ -819,7 +819,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
                     GUI.jobList.addItem(message)
                     GUI.jobList.scrollToBottom()
                 else:
-                    self.addMessage('Unsupported file type for ' + message, 'error')
+                    self.addMessage('Tipo de arquivo não suportado para ' + message, 'error')
 
     def dragAndDrop(self, e):
         e.accept()
@@ -852,8 +852,8 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
                 if 'Amazon kindlegen' in line:
                     versionCheck = line.split('V')[1].split(' ')[0]
                     if Version(versionCheck) < Version('2.9'):
-                        self.addMessage('Your <a href="https://www.amazon.com/b?node=23496309011">KindleGen</a>'
-                                        ' is outdated! MOBI conversion might fail.', 'warning')
+                        self.addMessage('Seu <a href="https://www.amazon.com/b?node=23496309011">KindleGen</a>'
+                                        ' está desatualizado! A conversão para MOBI pode falhar.', 'warning')
                     break
         except FileNotFoundError:
             self.kindleGen = False
@@ -1026,19 +1026,19 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
             "Kobo Mini/Touch",
         ]
 
-        statusBarLabel = QtWidgets.QLabel('<b><a href="https://kcc.iosphe.re/">HOMEPAGE</a> - <a href="https://github.'
+        statusBarLabel = QtWidgets.QLabel('<b><a href="https://kcc.iosphe.re/">PÁGINA INICIAL</a> - <a href="https://github.'
                                           'com/ciromattia/kcc/blob/master/README.md#issues--new-features--donations">DO'
-                                          'NATE</a> - <a href="http://www.mobileread.com/forums/showthread.php?t=207461'
-                                          '">FORUM</a></b>')
+                                          'AÇÃO</a> - <a href="http://www.mobileread.com/forums/showthread.php?t=207461'
+                                          '">FÓRUM</a></b>')
         statusBarLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         statusBarLabel.setOpenExternalLinks(True)
         GUI.statusBar.addPermanentWidget(statusBarLabel, 1)
 
-        self.addMessage('<b>Welcome!</b>', 'info')
-        self.addMessage('<b>Remember:</b> All options have additional information in tooltips.', 'info')
+        self.addMessage('<b>Bem-vindo!</b> <span style="color:green;">(Traduzido por pauloslash)</span>', 'info')
+        self.addMessage('<b>Lembre-se:</b> Todas as opções têm informações adicionais nos tooltips.', 'info')
         if self.startNumber < 5:
-            self.addMessage('Since you are a new user of <b>KCC</b> please see few '
-                            '<a href="https://github.com/ciromattia/kcc/wiki/Important-tips">important tips</a>.',
+            self.addMessage('Como você é um novo usuário do <b>KCC</b>, por favor veja algumas '
+                            '<a href="https://github.com/ciromattia/kcc/wiki/Important-tips">dicas importantes</a>.',
                             'info')
         try:
             subprocess_run(['tar'], stdout=PIPE, stderr=STDOUT)
@@ -1051,8 +1051,8 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
         except FileNotFoundError:
             self.sevenzip = False
             if not self.tar:
-                self.addMessage('<a href="https://github.com/ciromattia/kcc#7-zip">Install 7z (link)</a>'
-                                ' to enable CBZ/CBR/ZIP/etc processing.', 'warning')
+                self.addMessage('<a href="https://github.com/ciromattia/kcc#7-zip">Instale o 7z (link)</a>'
+                                ' para habilitar o processamento de CBZ/CBR/ZIP/etc.', 'warning')
         self.detectKindleGen(True)
 
         APP.messageFromOtherInstance.connect(self.handleMessage)
@@ -1137,7 +1137,7 @@ class KCCGUI(KCC_ui.Ui_mainWindow):
         if self.windowSize != '0x0':
             x, y = self.windowSize.split('x')
             MW.resize(int(x), int(y))
-        MW.setWindowTitle("Kindle Comic Converter " + __version__)
+        MW.setWindowTitle("Kindle Comic Converter " + __version__ + " (Traduzido por pauloslash)")
         MW.show()
         MW.raise_()
 
@@ -1148,11 +1148,11 @@ class KCCGUI_MetaEditor(KCC_ui_editor.Ui_editorDialog):
         if self.parser.format in ['RAR', 'RAR5']:
             self.editorWidget.setEnabled(False)
             self.okButton.setEnabled(False)
-            self.statusLabel.setText('CBR metadata are read-only.')
+            self.statusLabel.setText('Os metadados CBR são somente leitura.')
         else:
             self.editorWidget.setEnabled(True)
             self.okButton.setEnabled(True)
-            self.statusLabel.setText('Separate authors with a comma.')
+            self.statusLabel.setText('Separe os autores com uma vírgula.')
         for field in (self.seriesLine, self.volumeLine, self.numberLine):
             field.setText(self.parser.data[field.objectName().capitalize()[:-4]])
         for field in (self.writerLine, self.pencillerLine, self.inkerLine, self.coloristLine):
@@ -1168,7 +1168,7 @@ class KCCGUI_MetaEditor(KCC_ui_editor.Ui_editorDialog):
             if field.text().isnumeric() or self.cleanData(field.text()) == '':
                 self.parser.data[field.objectName().capitalize()[:-4]] = self.cleanData(field.text())
             else:
-                self.statusLabel.setText(field.objectName().capitalize()[:-4] + ' field must be a number.')
+                self.statusLabel.setText(field.objectName().capitalize()[:-4] + ' o campo deve ser um número.')
                 break
         else:
             self.parser.data['Series'] = self.cleanData(self.seriesLine.text())

@@ -46,6 +46,10 @@ class BuildBinaryCommand(setuptools.Command):
         elif sys.platform == 'linux':
             os.system(
                 'pyinstaller --hidden-import=_cffi_backend --hidden-import=queue -y -F -i icons/comic2ebook.ico -n kcc_linux_' + VERSION + ' kcc.py')
+            os.system(
+                'pyinstaller --hidden-import=_cffi_backend --hidden-import=queue -y -F -i icons/comic2ebook.ico -n kcc-c2e_linux_' + VERSION + ' kcc-c2e.py')
+            os.system(
+                'pyinstaller --hidden-import=_cffi_backend --hidden-import=queue -y -F -i icons/comic2ebook.ico -n kcc-c2p_linux_' + VERSION + ' kcc-c2p.py')
             sys.exit(0)
         else:
             sys.exit(0)

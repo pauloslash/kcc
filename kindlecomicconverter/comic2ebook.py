@@ -1116,13 +1116,13 @@ def checkTools(source):
         try:
             subprocess_run(['7z'], stdout=PIPE, stderr=STDOUT)
         except FileNotFoundError:
-            print('ERROR: 7z is missing!')
+            print('ERRO: 7z ausente!')
             sys.exit(1)
     if options.format == 'MOBI':
         try:
             subprocess_run(['kindlegen', '-locale', 'en'], stdout=PIPE, stderr=STDOUT)
         except FileNotFoundError:
-            print('ERROR: KindleGen is missing!')
+            print('ERRO: KindleGen ausente!')
             sys.exit(1)
 
 
@@ -1141,7 +1141,7 @@ def checkPre(source):
         with TemporaryFile(prefix='KCC-', dir=src):
             pass
     except Exception:
-        raise UserWarning("Target directory is not writable.")
+        raise UserWarning("O diretório de destino não é gravável.")
 
 
 def makeBook(source, qtgui=None):
@@ -1152,20 +1152,20 @@ def makeBook(source, qtgui=None):
     else:
         checkTools(source)
     checkPre(source)
-    print("Preparing source images...")
+    print("Preparando imagens de origem...")
     path = getWorkFolder(source)
-    print("Checking images...")
+    print("Verificando imagens...")
     getComicInfo(os.path.join(path, "OEBPS", "Images"), source)
     detectCorruption(os.path.join(path, "OEBPS", "Images"), source)
     if options.webtoon:
         y = image.ProfileData.Profiles[options.profile][1][1]
         comic2panel.main(['-y ' + str(y), '-i', '-m', path], qtgui)
     if options.noprocessing:
-        print("Do not process image, ignore any profile or processing option")
+        print("Não processe a imagem, ignore qualquer perfil ou opção de processamento")
     else:
-        print("Processing images...")
+        print("Processando imagens...")
         if GUI:
-            GUI.progressBarTick.emit('Processing images')
+            GUI.progressBarTick.emit('Processando imagens')
         imgDirectoryProcessing(os.path.join(path, "OEBPS", "Images"))
     if GUI:
         GUI.progressBarTick.emit('1')
