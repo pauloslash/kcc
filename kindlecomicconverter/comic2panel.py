@@ -227,7 +227,7 @@ def main(argv=None, qtgui=None):
                 splitWorkerOutput = []
                 splitWorkerPool = Pool(maxtasksperchild=10)
                 if args.merge:
-                    print("Merging images...")
+                    print("Unindo imagens...")
                     directoryNumer = 1
                     mergeWork = []
                     mergeWorkerOutput = []
@@ -239,7 +239,7 @@ def main(argv=None, qtgui=None):
                             directoryNumer += 1
                             mergeWork.append([os.path.join(root, directory)])
                     if GUI:
-                        GUI.progressBarTick.emit('Combining images')
+                        GUI.progressBarTick.emit('Combinando imagens')
                         GUI.progressBarTick.emit(str(directoryNumer))
                     for i in mergeWork:
                         mergeWorkerPool.apply_async(func=mergeDirectory, args=(i, ), callback=mergeDirectoryTick)
@@ -252,7 +252,7 @@ def main(argv=None, qtgui=None):
                         rmtree(targetDir, True)
                         raise RuntimeError("One of workers crashed. Cause: " + mergeWorkerOutput[0][0],
                                            mergeWorkerOutput[0][1])
-                print("Splitting images...")
+                print("Dividindo imagens...")
                 for root, _, files in os.walk(targetDir, False):
                     for name in files:
                         if getImageFileName(name) is not None:
@@ -261,7 +261,7 @@ def main(argv=None, qtgui=None):
                         else:
                             os.remove(os.path.join(root, name))
                 if GUI:
-                    GUI.progressBarTick.emit('Splitting images')
+                    GUI.progressBarTick.emit('Dividindo imagens')
                     GUI.progressBarTick.emit(str(pagenumber))
                     GUI.progressBarTick.emit('tick')
                 if len(work) > 0:
